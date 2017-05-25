@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.GridView;
 
@@ -36,6 +37,9 @@ public class UploadIMGActivity extends AppCompatActivity implements
 
     private GridView imgArea;
     private GridAdapter adapter;
+    private UploadPresenter presenter;
+
+    private Button submit;
 
     private boolean isShowDelete = false;
 
@@ -50,6 +54,7 @@ public class UploadIMGActivity extends AppCompatActivity implements
             actionBar.setTitle("上传图片");
         }
         initView();
+        presenter = new UploadPresenter();
     }
 
     private void initView(){
@@ -57,6 +62,14 @@ public class UploadIMGActivity extends AppCompatActivity implements
         adapter = new GridAdapter(this);
         imgArea.setAdapter(adapter);
         imgArea.setOnItemLongClickListener(this);
+        submit = (Button)findViewById(R.id.submit);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 //presenter.uploadIMG(imgPath.get(0));
+                presenter.uploadIMGs(imgPath);
+            }
+        });
     }
 
     @Override
