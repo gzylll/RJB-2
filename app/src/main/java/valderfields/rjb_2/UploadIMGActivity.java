@@ -1,13 +1,14 @@
 package valderfields.rjb_2;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.Layout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,14 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.GridView;
-
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import android.widget.Toast;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
@@ -30,18 +25,37 @@ public class UploadIMGActivity extends AppCompatActivity implements
         AdapterView.OnItemLongClickListener{
 
     private int REQUEST_IMAGE = 1;
-    //路径列表
-    private List<String> imgPath = new ArrayList<>();
-    //图片列表
-    private List<Bitmap> bmpList = new ArrayList<>();
 
     private GridView imgArea;
-    private GridAdapter adapter;
+    public GridAdapter adapter;
     private UploadPresenter presenter;
 
     private Button submit;
+    private static ProgressDialog dialog;
 
-    private boolean isShowDelete = false;
+    private int imgCount;
+
+    public Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.arg1){
+                case 0x01:
+                    dialog.dismiss();
+                    Toast.makeText(UploadIMGActivity.this,"连接错误",Toast.LENGTH_SHORT).show();
+                    break;
+                case 0x02:
+                    dialog.dismiss();
+                    Toast.makeText(UploadIMGActivity.this,msg.obj.toString(),Toast.LENGTH_SHORT).show();
+                    break;
+                case 0x03:
+                    dialog.dismiss();
+                    Toast.makeText(UploadIMGActivity.this,"上传失败",Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+
+    public boolean isShowDelete = false;
 
 
     @Override
@@ -54,7 +68,7 @@ public class UploadIMGActivity extends AppCompatActivity implements
             actionBar.setTitle("上传图片");
         }
         initView();
-        presenter = new UploadPresenter();
+        presenter = new UploadPresenter(this);
     }
 
     private void initView(){
@@ -66,10 +80,12 @@ public class UploadIMGActivity extends AppCompatActivity implements
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 //presenter.uploadIMG(imgPath.get(0));
-                presenter.uploadIMGs(imgPath);
+                presenter.uploadIMGs();
+                showDialog();
             }
         });
+        SharedPreferences sp = getSharedPreferences("setting",MODE_PRIVATE);
+        imgCount = sp.getInt("imgCount",9);
     }
 
     @Override
@@ -83,17 +99,11 @@ public class UploadIMGActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.selectIMG:
-                /*
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent,1);
-                */
                 Intent intent = new Intent(this, MultiImageSelectorActivity.class);
                 // 是否显示调用相机拍照
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
                 // 最大图片选择数量
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 9);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, imgCount);
                 // 设置模式 (多选/MultiImageSelectorActivity.MODE_MULTI)
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
                 startActivityForResult(intent, REQUEST_IMAGE);
@@ -112,7 +122,7 @@ public class UploadIMGActivity extends AppCompatActivity implements
         if(requestCode == REQUEST_IMAGE){
             if(resultCode == RESULT_OK){
                 // 获取返回的图片列表,并更新
-                UpdateImgListData(
+                presenter.UpdateImgListData(
                         data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT));
             }
         }
@@ -120,42 +130,7 @@ public class UploadIMGActivity extends AppCompatActivity implements
     }
 
     /**
-     * 更新图片数组，更新显示适配
-     * @param data 新的数据集
-     */
-    private void UpdateImgListData(List<String> data){
-        for(int i=0;i<data.size();i++){
-            boolean isExist = false;
-            for(int j=0;j<imgPath.size();j++){
-                if(data.get(i).equals(imgPath.get(j))){
-                    isExist = true;
-                    break;
-                }
-            }
-            if(!isExist){
-                imgPath.add(data.get(i));
-                //获取新的图片
-                String filepath = data.get(i);
-                File file = new File(filepath);
-                if (file.exists()) {
-                    Bitmap bm = BitmapFactory.decodeFile(filepath);
-                    //将图片更新到列表中
-                    bmpList.add(bm);
-                }
-            }
-        }
-        isShowDelete = false;
-        adapter.setIsShowDelete(false);
-        adapter.setData(imgPath);
-    }
-
-    /**
      * 图片长按删除
-     * @param parent
-     * @param view
-     * @param position
-     * @param id
-     * @return
      */
    @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -171,22 +146,13 @@ public class UploadIMGActivity extends AppCompatActivity implements
                public void onItemClick(AdapterView<?> parent, View view,
                                        int position, long id) {
                    if(isShowDelete)
-                        DeleteItem(position);//删除选中项
+                        presenter.DeleteItem(position);//删除选中项
                }
            });
        }
        return true;
     }
 
-    /**
-     * 删除图片
-     * @param i 图片id
-     */
-    private void DeleteItem(int i){
-        imgPath.remove(i);
-        bmpList.remove(i);
-        adapter.setData(imgPath);
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -199,4 +165,13 @@ public class UploadIMGActivity extends AppCompatActivity implements
             return super.onKeyDown(keyCode, event);
         }
     }
+
+    public void showDialog(){
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("上传中");
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
 }

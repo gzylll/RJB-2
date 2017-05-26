@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -15,16 +16,21 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".UploadIMGActivity"
-            android:parentActivityName=".MainActivity"/>
-        <!--Image Selector Entry-->
+            android:parentActivityName=".MainActivity" />
+        <!-- Image Selector Entry -->
         <activity
-            android:configChanges="orientation|screenSize"
-            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity" />
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".SettingActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".LookupUserActivity"></activity>
     </application>
 
 </manifest>

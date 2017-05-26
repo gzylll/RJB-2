@@ -11,6 +11,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private View userMessage;
     private View uploadIMG;
+    private View setting;
+    private View lookupUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +26,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userMessage.setOnClickListener(this);
         uploadIMG = findViewById(R.id.uploadIMG);
         uploadIMG.setOnClickListener(this);
+        setting = findViewById(R.id.Setting);
+        setting.setOnClickListener(this);
+        lookupUser = findViewById(R.id.lookupUser);
+        lookupUser.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()){
             case R.id.uploadIMG:
-                Intent intent = new Intent(this,UploadIMGActivity.class);
+                intent = new Intent(this,UploadIMGActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.lookupUser:
+                intent = new Intent(this,LookupUserActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.Setting:
+                intent = new Intent(this,SettingActivity.class);
                 startActivity(intent);
                 break;
             case R.id.userMessage:
