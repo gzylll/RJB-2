@@ -33,6 +33,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(this,UploadIMGActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.userMessage:
+            case R.id.avatar:
+            case R.id.username:
+                Intent intent1 = new Intent(this,MyInfoActivity.class);
+                startActivity(intent1);
+                break;
         }
     }
 }
