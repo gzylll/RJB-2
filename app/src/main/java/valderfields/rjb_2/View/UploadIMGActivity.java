@@ -1,6 +1,5 @@
-package valderfields.rjb_2;
+package valderfields.rjb_2.View;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +19,9 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+import valderfields.rjb_2.Presenter.GridAdapter;
+import valderfields.rjb_2.R;
+import valderfields.rjb_2.Presenter.UploadPresenter;
 
 public class UploadIMGActivity extends AppCompatActivity implements
         AdapterView.OnItemLongClickListener{

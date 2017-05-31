@@ -1,4 +1,4 @@
-package valderfields.rjb_2;
+package valderfields.rjb_2.Model;
 
 /**
  * 用户实体
@@ -8,7 +8,7 @@ package valderfields.rjb_2;
 public class UserBean {
 
     private String UID;
-    private String name;
+    private String username;
     private String phone;
     private String email;
     private String password;
@@ -30,12 +30,12 @@ public class UserBean {
         this.UID = UID;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPhone() {
@@ -64,7 +64,7 @@ public class UserBean {
 
     @Override
     public String toString() {
-        return "UID:["+UID+"],Name:["+name+"],Phone:["+phone+"],Email:["+email+"],Password:["
+        return "UID:["+UID+"],Name:["+ username +"],Phone:["+phone+"],Email:["+email+"],Password:["
                 +password+"],Hobbies:["+hobbies+"]";
     }
 }

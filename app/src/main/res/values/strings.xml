@@ -10,4 +10,11 @@
     <string name="uploadcount">一次选择的图片数量</string>
     <string name="uid">UID:</string>
     <string name="username">用户名:</string>
+    <string name="phone">手机号:</string>
+    <string name="email">邮箱:</string>
+    <string name="password">密码:</string>
+    <string name="hobbies">爱好:</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="changePassword">管理员修改用户密码</string>
 </resources>

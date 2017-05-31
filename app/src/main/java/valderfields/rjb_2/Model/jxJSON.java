@@ -1,4 +1,4 @@
-package valderfields.rjb_2;
+package valderfields.rjb_2.Model;
 
 import android.util.Log;
 
@@ -30,7 +30,7 @@ public class jxJSON {
                     bean.setEmail(jsonObject.getString("email"));
                 else
                     bean.setEmail("");
-                bean.setName(jsonObject.getString("username"));
+                bean.setUsername(jsonObject.getString("username"));
                 bean.setPassword(jsonObject.getString("password"));
                 if(jsonObject.has("phone"))
                     bean.setPhone(jsonObject.getString("phone"));

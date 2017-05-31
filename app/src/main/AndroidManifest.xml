@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".View.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,16 +21,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UploadIMGActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".View.UploadIMGActivity"
+            android:parentActivityName=".View.MainActivity" />
         <!-- Image Selector Entry -->
         <activity
             android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name=".SettingActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".LookupUserActivity"></activity>
+            android:name=".View.SettingActivity"
+            android:parentActivityName=".View.MainActivity" />
+        <activity android:name=".View.LookupUserActivity"
+            android:parentActivityName=".View.MainActivity"></activity>
     </application>
 
 </manifest>

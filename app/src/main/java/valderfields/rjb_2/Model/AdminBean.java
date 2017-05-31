@@ -1,4 +1,4 @@
-package valderfields.rjb_2;
+package valderfields.rjb_2.Model;
 
 /**
  * Created by 11650 on 2017/5/26.

@@ -1,23 +1,30 @@
-package valderfields.rjb_2;
+package valderfields.rjb_2.View;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class LookupUserActivity extends AppCompatActivity {
+import valderfields.rjb_2.Presenter.LookupUserPresenter;
+import valderfields.rjb_2.R;
+
+public class LookupUserActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     private ListView userList;
     private LookupUserPresenter presenter;
     private SimpleAdapter adapter;
     //list中显示的用户数据
     private List<HashMap<String,String>> dataList = new ArrayList<>();
+    private Boolean canChangePWN;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,10 +32,13 @@ public class LookupUserActivity extends AppCompatActivity {
         presenter = new LookupUserPresenter(this);
         initView();
         presenter.initData();
+        getSupportActionBar().setTitle("查看用户");
     }
 
     private void initView()
     {
+        SharedPreferences sp = getSharedPreferences("setting",MODE_PRIVATE);
+        canChangePWN = sp.getBoolean("cPWN",false);
         userList = (ListView)findViewById(R.id.userList);
         //生成适配器
         adapter = new SimpleAdapter(this,
@@ -37,8 +47,13 @@ public class LookupUserActivity extends AppCompatActivity {
                 new String[] {"uid", "username"},
                 new int[] {R.id.userUID,R.id.userName});
         userList.setAdapter(adapter);
+        userList.setOnItemClickListener(this);
     }
 
+    /**
+     * 刷新数据显示
+     * @param dataList 数据
+     */
     public void updateData(List<HashMap<String,String>> dataList)
     {
         this.dataList.clear();
@@ -50,5 +65,12 @@ public class LookupUserActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        UserDialog userDialog = new UserDialog(this,canChangePWN);
+        userDialog.initData(presenter.getUserBeanDataAt(position));
+        userDialog.Show();
     }
 }

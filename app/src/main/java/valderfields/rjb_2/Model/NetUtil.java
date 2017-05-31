@@ -1,4 +1,4 @@
-package valderfields.rjb_2;
+package valderfields.rjb_2.Model;
 
 import java.io.File;
 import java.util.List;

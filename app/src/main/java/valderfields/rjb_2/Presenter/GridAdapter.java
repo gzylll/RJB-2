@@ -1,4 +1,4 @@
-package valderfields.rjb_2;
+package valderfields.rjb_2.Presenter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,6 +18,7 @@ import java.util.List;
 
 import me.nereo.multi_image_selector.MultiImageSelectorFragment;
 import me.nereo.multi_image_selector.bean.Image;
+import valderfields.rjb_2.R;
 
 /**
  * Created by 11650 on 2017/5/24.
