@@ -30,7 +30,10 @@
         <activity
             android:name=".View.SettingActivity"
             android:parentActivityName=".View.MainActivity" />
-        <activity android:name=".View.LookupUserActivity"
+        <activity
+            android:name=".View.LookupUserActivity"
+            android:parentActivityName=".View.MainActivity" />
+        <activity android:name=".View.AdminActivity"
             android:parentActivityName=".View.MainActivity"></activity>
     </application>
 

@@ -1,5 +1,6 @@
 package valderfields.rjb_2.Presenter;
 
+import android.app.ProgressDialog;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,6 +32,11 @@ public class LookupUserPresenter {
     }
 
     public void initData() {
+        final ProgressDialog dialog = new ProgressDialog(activity);
+        dialog.setMessage("加载用户信息");
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+        dialog.show();
         NetUtil.PersonalOkHttpCilent.newCall(
                 NetUtil.getUserRequest("admin", "admin")
         ).enqueue(new Callback() {
@@ -44,6 +50,7 @@ public class LookupUserPresenter {
                 if (response.code() == 200) {
                     userBeanList = jxJSON.jxUser(response.body().string());
                     Log.i("1", userBeanList.toString());
+                    dialog.dismiss();
                     updataListData();
                 } else {
                     Toast.makeText(activity, "获取失败", Toast.LENGTH_SHORT).show();
